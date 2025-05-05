@@ -6,11 +6,11 @@ const QRScanner = () => {
   const [error, setError] = useState('');
   const qrRef = useRef(null);
   const html5QrCodeRef = useRef(null);
-  const isRunningRef = useRef(false); // ✅ Track if scanner is running
+  const isRunningRef = useRef(false);
 
   useEffect(() => {
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-    const cameraConfig = { facingMode: "user" };
+    const cameraConfig = { facingMode: "environment" }; // 👈 Use rear camera
 
     const html5QrCode = new Html5Qrcode("reader");
     html5QrCodeRef.current = html5QrCode;
@@ -41,7 +41,7 @@ const QRScanner = () => {
               }
             },
             (scanError) => {
-              // Ignore scan errors
+              // optional: ignore or log scanError
             }
           )
           .then(() => {
@@ -72,7 +72,7 @@ const QRScanner = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '1rem' }}>
-      <h2>QR Scanner (Front Camera)</h2>
+      <h2>QR Scanner (Rear Camera)</h2>
       <div
         id="reader"
         ref={qrRef}
