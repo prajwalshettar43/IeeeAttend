@@ -1,31 +1,34 @@
-// QRScanner.jsx
 import React, { useState } from 'react';
-import { QRScanner as YudielQRScanner } from '@yudiel/react-qr-scanner';
+import { QrReader } from 'react-qr-reader';
 
 const QRScanner = () => {
-  const [result, setResult] = useState('');
+  const [data, setData] = useState('No result');
+  const [error, setError] = useState(null);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-2xl font-bold mb-4">Front Camera QR Scanner</h1>
+    <div style={{ padding: '1rem', textAlign: 'center' }}>
+      <h2>QR Code Scanner</h2>
+      <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <QrReader
+          constraints={{ facingMode: 'user' }} // 'user' for front camera
+          onResult={(result, error) => {
+            if (!!result) {
+              setData(result?.text);
+              setError(null);
+            }
 
-      <div className="w-full max-w-md aspect-video border-4 border-blue-500 rounded-lg overflow-hidden">
-        <YudielQRScanner
-          onDecode={(code) => setResult(code)}
-          onError={(error) => console.error('QR Error:', error)}
-          constraints={{
-            video: {
-              facingMode: { exact: 'user' } // Front camera
+            if (!!error) {
+              setError(error);
             }
           }}
+          style={{ width: '100%' }}
         />
       </div>
-
-      {result && (
-        <div className="mt-6 bg-green-700 p-4 rounded-lg text-white shadow-lg">
-          <strong>Scanned Result:</strong>
-          <div className="mt-2 break-words">{result}</div>
-        </div>
+      <p><strong>Scanned Data:</strong> {data}</p>
+      {error && (
+        <p style={{ color: 'red' }}>
+          <strong>Error:</strong> {error.message}
+        </p>
       )}
     </div>
   );
